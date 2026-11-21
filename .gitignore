@@ -221,3 +221,37 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+
+# ==========================================
+# AGROSELETIVO - CONFIGURACOES DO PROJETO
+# ==========================================
+
+# Ambiente virtual Python
+.venv/
+
+# Dados locais (imagens e mascaras)
+/dados/*
+!/dados/.gitkeep
+
+# Modelos treinados e checkpoints
+/modelos/*
+!/modelos/.gitkeep
+
+# Arquivos de pesos de redes neurais
+*.pt
+*.pth
+*.ckpt
+*.safetensors
+
+# Arquivos compactados grandes
+*.zip
+*.tar.gz
+
+# Credenciais e configuracoes locais
+.env
+.env.*
+!.env.example
+
+# Resultados temporarios
+/resultados/temporarios/
