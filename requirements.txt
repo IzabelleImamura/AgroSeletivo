@@ -1,0 +1,7 @@
+# Dependências mínimas do projeto; registrar versões exatas antes da entrega final.
+# PyTorch: em alguns ambientes a instalação depende da plataforma (CPU/CUDA).
+numpy
+Pillow
+torch
+segmentation-models-pytorch
+streamlit
