@@ -398,3 +398,23 @@ Para reprodução científica, registrar **versões exatas das dependências**, 
 - Documentação Streamlit: https://docs.streamlit.io/
 
 **Ponto de atenção:** este material não substitui uma conferência final das saídas e dos hiperparâmetros dentro do notebook efetivo. Onde se lê “registrado”, trata-se de informação recuperada do histórico dos experimentos, não de um artefato Colab auditado no GitHub.
+
+
+## 21. Auditoria do notebook recebido em 21/11/2026
+
+Foi inspecionado o arquivo original `AgroSeletivo_Treinamento.ipynb` baixado do Google Colab (cerca de 1,9 MB), **antes de sua publicação no GitHub**. Ele possui **41 células** (20 Markdown e 21 de código), com resultados de execução armazenados. A inspeção confirma:
+
+- Ambiente registrado: GPU **Tesla T4**, PyTorch **2.14.1+cu130** e `segmentation_models_pytorch` **0.6.0** nas saídas do notebook.
+- Experimento piloto: 200 fotografias de treino, 50 de validação, primeira época de Cross-Entropy sem pesos com IoU de daninhas **0,0115**.
+- Continuação piloto sem pesos: IoU de daninhas na época 5 de **0,0290**.
+- Continuação piloto ponderada: IoU de daninhas na época 5 de **0,4150**. **Não comparar isso com o conjunto completo como experimento controlado**, pois os dados diferem.
+- Treinamento completo: 1.407 fotografias, 50 de validação de desenvolvimento, 5 épocas, lote 2, Cross-Entropy ponderada com pesos **[1,00; 2,7202413; 13,2805204]** para solo/cultura/daninhas. `historico_completo_ponderado.json` foi escrito no Google Drive.
+- Melhor checkpoint escolhido pela maior **IoU de daninhas**, não pela menor perda global: **época 3**, IoU **0,5612** no conjunto de 50 fotografias. A época 5 apresentou IoU **0,5572**, abaixo da época 3, embora a perda de validação tenha sido menor.
+- Avaliação reservada: 722 fotografias / 2.888 recortes, resultado de **0,5532** de IoU de daninhas, **0,6309** de precisão e **0,8178** de recall, confirmados pelas saídas e pela matriz de confusão.
+- O notebook registra verificação posterior de **zero nomes repetidos** entre as 50 fotografias de validação e as 722 da avaliação.
+- **Ponto de correção:** a célula de preparação do conjunto reservado (etapa 8.1) contém uma saída de `FileNotFoundError` ao tentar reabrir o ZIP `AgroSeletivo_dados_piloto.zip` no Drive. A extração das 722 fotos já tinha ocorrido e uma célula independente posterior confirmou a separação dos grupos. A falha não invalida, por si só, as métricas posteriores, mas deve ser documentada ou corrigida em versão de publicação.
+- **Ponto de reprodutibilidade:** a célula que carrega o conjunto completo aparece visualmente antes das células de experimentos piloto, porém seu número de execução é posterior. `Executar tudo` em sequência linear pode assim alterar o experimento piloto. Recomenda-se separar `notebooks/piloto.ipynb` e `notebooks/treinamento_completo.ipynb`, ou reorganizar os blocos e documentar dependências antes de afirmar reprodução integral.
+- A saída da última célula de análise visual está oculta no arquivo exportado; as outras células retêm imagens, logs e gráficos.
+- Uma inspeção automatizada de padrões comuns de tokens, chaves e endereços de e-mail não encontrou correspondências; isso **não é uma auditoria integral de privacidade** e o conteúdo deve ser revisado manualmente antes da publicação.
+
+**Próxima ação:** versionar o notebook original/revisado separadamente do modelo `.pt` e dos dados volumosos. Preservar uma cópia intacta do original fora do GitHub. Os resultados registrados no notebook se referem ao ambiente Colab da execução; um reprocessamento atual pode variar conforme versões e ordem de células.
