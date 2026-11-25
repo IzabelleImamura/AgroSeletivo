@@ -412,7 +412,7 @@ div.stDownloadButton > button:hover {
 
     /* 1. Espacamento geral */
     .block-container {
-        padding-top: 2rem !important;
+        padding-top: 5rem !important;
         padding-left: 1rem !important;
         padding-right: 1rem !important;
         padding-bottom: 1.5rem !important;
