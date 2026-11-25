@@ -9,6 +9,10 @@ import streamlit as st
 import torch
 import segmentation_models_pytorch as smp
 
+
+import os
+import urllib.request
+
 from PIL import Image, ImageOps, UnidentifiedImageError
 
 
@@ -474,13 +478,46 @@ def limpar_analise():
 # 4. CARREGAR A REDE NEURAL
 # ==========================================
 
+
 @st.cache_resource(show_spinner=False)
 def carregar_modelo():
 
+    # Baixar o modelo apenas se ele nao existir localmente
     if not CAMINHO_MODELO.is_file():
-        raise FileNotFoundError(
-            f"Modelo nao encontrado: {CAMINHO_MODELO}"
+
+        url = (
+            "https://github.com/IzabelleImamura/AgroSeletivo/"
+            "releases/download/v1.0.0/"
+            "unet_completo_ponderado_melhor.pt"
         )
+
+        CAMINHO_MODELO.parent.mkdir(
+            parents=True, exist_ok=True
+        )
+
+        temporario = CAMINHO_MODELO.with_suffix(".download")
+
+        try:
+            requisicao = urllib.request.Request(
+                url,
+                headers={"User-Agent": "AgroSeletivo/1.0"}
+            )
+
+            with urllib.request.urlopen(
+                requisicao, timeout=120
+            ) as resposta, open(temporario, "wb") as arquivo:
+
+                while True:
+                    bloco = resposta.read(1024 * 1024)
+                    if not bloco:
+                        break
+                    arquivo.write(bloco)
+
+            os.replace(temporario, CAMINHO_MODELO)
+
+        finally:
+            if temporario.exists():
+                temporario.unlink()
 
     # Mesma arquitetura utilizada no treinamento
     modelo = smp.Unet(
@@ -506,6 +543,7 @@ def carregar_modelo():
     modelo.eval()
 
     return modelo
+
 
 
 # ==========================================
