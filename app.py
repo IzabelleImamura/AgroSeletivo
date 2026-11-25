@@ -407,36 +407,93 @@ div.stDownloadButton > button:hover {
    2.13. RESPONSIVIDADE
    ========================================== */
 
+
 @media (max-width: 650px) {
 
+    /* 1. Espacamento geral */
     .block-container {
-        padding-top: 3rem !important;
+        padding-top: 2rem !important;
         padding-left: 1rem !important;
         padding-right: 1rem !important;
+        padding-bottom: 1.5rem !important;
+    }
+
+    /* 2. Cabecalho */
+    .agro-header {
+        padding-bottom: 16px;
+        margin-bottom: 18px;
     }
 
     .agro-brand {
         font-size: 21px;
+        line-height: 1.4;
+        overflow: visible;
     }
 
     .agro-header-description {
         display: none;
     }
 
+    /* 3. Titulo da pagina */
     .agro-title {
         font-size: 20px;
+        line-height: 1.4;
+        overflow: visible;
     }
 
-    .agro-legend {
-        gap: 12px;
+    .agro-description {
+        font-size: 12px;
+        line-height: 1.6;
+        margin-bottom: 14px;
     }
 
+    /* 4. Upload compacto */
+    [data-testid="stFileUploaderDropzone"] {
+        display: flex !important;
+        flex-direction: row !important;
+        align-items: center !important;
+        justify-content: flex-start !important;
+        gap: 10px !important;
+        min-height: 48px !important;
+        padding: 4px !important;
+        border: none !important;
+        background: transparent !important;
+    }
+
+    /* Esconder elementos nativos desnecessarios */
+    [data-testid="stFileUploaderDropzone"] svg,
+    [data-testid="stFileUploaderDropzoneInstructions"] {
+        display: none !important;
+    }
+
+    /* Icone personalizado */
+    [data-testid="stFileUploaderDropzone"]::before {
+        flex: 0 0 36px;
+        width: 36px;
+        height: 36px;
+    }
+
+    /* Texto compacto */
     [data-testid="stFileUploaderDropzone"]::after {
         content: "Selecionar fotografia";
         font-size: 11px;
+        min-width: 0;
     }
 
+    /* Botao nativo */
+    [data-testid="stFileUploaderDropzone"] button {
+        min-height: 36px !important;
+        padding: 6px 10px !important;
+        font-size: 11px !important;
+        white-space: nowrap;
+    }
+
+    /* 5. Legenda */
+    .agro-legend {
+        gap: 12px;
+    }
 }
+
 
 </style>
 """)
