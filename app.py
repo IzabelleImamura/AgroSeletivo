@@ -215,6 +215,26 @@ st.html("""
 }
 
 
+/* Ocultar o cartao nativo do arquivo selecionado */
+.stFileUploaderFile,
+[data-testid="stFileUploaderFile"] {
+    display: none !important;
+}
+
+/* Ocultar o botao adicional enquanto houver arquivo */
+[data-testid="stFileUploaderDropzone"]:has(
+    .stFileUploaderFile
+) button {
+    display: none !important;
+}
+
+/* Ocultar paginacao nativa, quando existir */
+[data-testid="stFileUploaderPagination"] {
+    display: none !important;
+}
+
+
+
 /* ==========================================
    2.6. INFORMACOES DA FOTOGRAFIA
    ========================================== */
@@ -893,6 +913,7 @@ if foto_atual is None:
 
         with coluna_upload:
 
+            
             arquivo = st.file_uploader(
                 "Selecionar fotografia",
                 type=["png", "jpg", "jpeg"],
@@ -902,6 +923,7 @@ if foto_atual is None:
                     f"{st.session_state['versao_upload']}"
                 )
             )
+
 
         # ==================================
         # BOTAO NA MESMA CAIXA
@@ -921,19 +943,19 @@ if foto_atual is None:
     # VALIDAR A FOTOGRAFIA ENVIADA
     # ======================================
 
+
+    
     if arquivo is not None:
 
         try:
-
             dados = arquivo.getvalue()
 
-            fotografia_teste = abrir_fotografia(
-                dados
-            )
+            with st.spinner("Preparando fotografia..."):
+                fotografia_teste = abrir_fotografia(dados)
 
-            identificador = hashlib.sha256(
-                dados
-            ).hexdigest()
+                identificador = hashlib.sha256(
+                    dados
+                ).hexdigest()
 
         except (
             UnidentifiedImageError,
@@ -947,8 +969,6 @@ if foto_atual is None:
             )
 
         else:
-
-            # Guardar o arquivo selecionado
             st.session_state["foto_atual"] = {
                 "nome": arquivo.name,
                 "dados": dados,
@@ -957,8 +977,8 @@ if foto_atual is None:
                 "altura": fotografia_teste.height
             }
 
-            # Atualizar para mostrar miniatura e botao
             st.rerun()
+
 
 
 # ==========================================
