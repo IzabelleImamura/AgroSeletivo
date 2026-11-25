@@ -531,6 +531,48 @@ def limpar_analise():
     st.rerun()
 
 
+def registrar_upload():
+
+    chave = (
+        f"upload_"
+        f"{st.session_state['versao_upload']}"
+    )
+
+    arquivo = st.session_state.get(chave)
+
+    if arquivo is None:
+        return
+
+    try:
+        dados = arquivo.getvalue()
+
+        fotografia = abrir_fotografia(dados)
+
+        identificador = hashlib.sha256(
+            dados
+        ).hexdigest()
+
+        st.session_state["foto_atual"] = {
+            "nome": arquivo.name,
+            "dados": dados,
+            "identificador": identificador,
+            "largura": fotografia.width,
+            "altura": fotografia.height
+        }
+
+        st.session_state["erro_upload"] = None
+
+    except (
+        UnidentifiedImageError,
+        OSError,
+        ValueError,
+        Image.DecompressionBombError
+    ) as erro:
+
+        st.session_state["erro_upload"] = str(erro)
+
+
+
 # ==========================================
 # 4. CARREGAR A REDE NEURAL
 # ==========================================
