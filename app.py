@@ -211,6 +211,12 @@ st.html("""
 }
 
 
+/* Ocultar apenas o botao de adicionar mais arquivos */
+[data-testid="stFileUploader"] button[aria-label="Add files"] {
+    display: none !important;
+}
+
+
 /* ==========================================
    2.6. INFORMACOES DA FOTOGRAFIA
    ========================================== */
